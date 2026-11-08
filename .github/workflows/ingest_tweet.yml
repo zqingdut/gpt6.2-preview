@@ -1,0 +1,113 @@
+name: Ingest GPT-6.2 Sol Tweet Case
+
+on:
+  issues:
+    types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      tweet_url:
+        description: '直接输入 X/Twitter 推文链接'
+        required: true
+      notes:
+        description: '补充说明或 Prompt（可选）'
+        required: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: ingest-issue-${{ github.event.issue.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  process-and-commit:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.labels.*.name, 'submission')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install System & Python Dependencies
+        run: |
+          if command -v ffmpeg >/dev/null 2>&1; then echo "ffmpeg 已预装，跳过 apt 安装"; else sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+          pip install -r requirements.txt
+
+      # Issue body is passed through an environment variable (never inlined
+      # into the script) to avoid shell/script injection from arbitrary text.
+      - name: Extract URL from Issue or Input
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          INPUT_URL: ${{ github.event.inputs.tweet_url }}
+          INPUT_NOTES: ${{ github.event.inputs.notes }}
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "TWEET_URL=$INPUT_URL" >> "$GITHUB_ENV"
+            echo "USER_NOTES=$INPUT_NOTES" >> "$GITHUB_ENV"
+          else
+            URL=$(printf '%s' "$ISSUE_BODY" | grep -Eo 'https://(x|twitter)\.com/[^/]+/status/[0-9]+' | head -n 1 || true)
+            echo "TWEET_URL=$URL" >> "$GITHUB_ENV"
+            # Notes = only the form's 补充说明 section (the raw body also
+            # contains the 推文链接 section and form scaffolding).
+            NOTES=$(printf '%s\n' "$ISSUE_BODY" | awk '/^### .*补充说明/{flag=1;next}/^### /{flag=0}flag' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | grep -v '^$' || true)
+            if [ "$NOTES" = "_No response_" ]; then NOTES=""; fi
+            {
+              echo "USER_NOTES<<EOF"
+              printf '%s\n' "$NOTES"
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          fi
+
+      - name: Check URL Present
+        run: |
+          if [ -z "$TWEET_URL" ]; then
+            echo "::warning::未在提交内容中找到推文链接，跳过处理。"
+          fi
+
+      - name: Run Ingestion & Build README
+        if: env.TWEET_URL != ''
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: |
+          python scripts/process_tweet.py
+          python scripts/build_readme.py
+
+      - name: Commit and Push Changes
+        if: env.TWEET_URL != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cases.json assets/previews/ README.md README_EN.md
+          git diff --staged --quiet || git commit -m "feat(case): auto-ingest tweet ${{ env.TWEET_URL }}"
+          ok=0
+          for i in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then ok=1; break; fi
+            echo "push 冲突，10 秒后重试 ($i/5)"; sleep 10
+          done
+          [ "$ok" = "1" ] || { echo "推送失败"; exit 1; }
+
+      - name: Comment and Close Issue
+        if: github.event_name == 'issues' && env.TWEET_URL != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `✅ 已自动解析推文并收录至 README，感谢贡献！`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed'
+            });

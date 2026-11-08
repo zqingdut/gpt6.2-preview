@@ -1,0 +1,60 @@
+name: Discover GPT-6.2 Sol Cases
+
+on:
+  schedule:
+    # Daily at 09:30 Asia/Shanghai (01:30 UTC)
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+    inputs:
+      max_new:
+        description: '本次最多收录新案例数'
+        required: false
+        default: '5'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: discover-tweets
+  cancel-in-progress: false
+
+jobs:
+  discover-and-ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install System & Python Dependencies
+        run: |
+          if command -v ffmpeg >/dev/null 2>&1; then echo "ffmpeg 已预装，跳过 apt 安装"; else sudo apt-get update && sudo apt-get install -y ffmpeg; fi
+          pip install -r requirements.txt
+
+      - name: Discover & Ingest New Cases
+        env:
+          MAX_NEW: ${{ github.event.inputs.max_new || '5' }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+        run: |
+          python scripts/discover_tweets.py
+          python scripts/build_readme.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cases.json assets/previews/ README.md README_EN.md
+          git diff --staged --quiet || git commit -m "feat(case): auto-discover new GPT-6.2 Sol cases"
+          ok=0
+          for i in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then ok=1; break; fi
+            echo "push 冲突，10 秒后重试 ($i/5)"; sleep 10
+          done
+          [ "$ok" = "1" ] || { echo "推送失败"; exit 1; }

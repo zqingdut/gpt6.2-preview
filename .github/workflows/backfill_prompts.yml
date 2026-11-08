@@ -1,0 +1,53 @@
+name: Backfill Prompts From Threads
+
+# Manual repair tool: re-extracts each case's original prompt, looking
+# at the author's whole thread (main post + their follow-up posts),
+# because creators often publish the prompt as a self-reply. Only the
+# `prompt` and `prompt_source` fields are ever written; cases that
+# already carry a prompt are verify-only and never rewritten.
+# Trigger from the Actions tab.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: backfill-prompts
+  cancel-in-progress: false
+
+jobs:
+  backfill-prompts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Backfill Prompts
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+        run: python scripts/backfill_prompts.py --all --rebuild-readme
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/cases.json README.md README_EN.md
+          git diff --staged --quiet || git commit -m "fix(case): backfill prompts from author threads"
+          ok=0
+          for i in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then ok=1; break; fi
+            echo "push 冲突，10 秒后重试 ($i/5)"; sleep 10
+          done
+          [ "$ok" = "1" ] || { echo "推送失败"; exit 1; }
