@@ -1,0 +1,42 @@
+**中文** | [English](README_EN.md)
+
+# GPT6.2 Sol Preview — GPT-6.2 Sol 灰度目击与社区实测索引
+
+追踪 X (Twitter) 上 **GPT-6.2 Sol** 的灰度线索与社区实测：配额/用量目击、官方暗示，以及同批灰度（含 GPT-6.2 Astra）的 3D 与游戏演示——链接、提示词与核验状态，一处索引。
+
+> **注意**：截至 2026 年 11 月，GPT-6.2 Sol 尚未被 OpenAI 官方发布。以下均为灰度目击与社区报告，模型归属以原帖作者的标注为准，请以原帖为准。
+> 本仓库仅做整理与索引；视频类案例的预览为原视频前 5 秒的 WebP 动图，截图类为原图缩略，完整内容请看原帖。原帖与视频版权归各原作者所有。
+
+> 💡 **如何贡献**：在本仓库提交 [Issue](../../issues/new?template=submit_case.yml)（模板会自动带 `submission` 标签），只需粘贴一条推文链接，GitHub Actions 会自动解析、分类并更新本页与 `data/cases.json`。
+
+## 总览表
+
+| 预览 | Part | 标题 | 作者 | 耗时 | 成本 | 时长 | 日期 | 原帖 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+{% for item in cases -%}
+| {% if item.preview_webp %}<img src="{{ item.preview_webp }}" width="160" />{% endif %} | {{ item.part | cell if item.part else '—' }} | {{ item.title | cell }} | {{ item.author }} | {{ item.work_time | cell if item.work_time else '—' }} | {{ item.cost_usd | cost if item.cost_usd != '' and item.cost_usd is not none else '—' }} | {% if item.duration_sec %}{{ item.duration_sec }}s{% else %}—{% endif %} | {{ item.created_at }} | [链接]({{ item.tweet_url }}) |
+{% endfor %}
+{% for cat_key, cat_title in categories.items() %}{% set rows = cases | selectattr('category', 'equalto', cat_key) | list %}{% if rows %}
+## {{ cat_title }}
+
+| 预览 | 案例名称与摘要 | 技术栈 & 状态 | 原始 Prompt / 链接 |
+| :--- | :--- | :--- | :--- |
+{% for item in rows -%}
+| {% if item.preview_webp %}<img src="{{ item.preview_webp }}" width="220" />{% else %}暂无预览{% endif %} | **{{ item.title | cell }}**<br/>{{ item.summary | cell }}<br/>*By {{ item.author }} ({{ item.created_at }})* | {% if item.tech_stack %}`{{ item.tech_stack | join('` `') }}`<br/>{% endif %}🏷️ {{ item.verification }} | [🔗 原推文]({{ item.tweet_url }}){% if item.demo_url %} / [🕹️ 在线试玩]({{ item.demo_url }}){% endif %}<br/><details><summary>查看 Prompt</summary><pre>{{ item.prompt | cell }}</pre></details> |
+{% endfor %}{% endif %}{% endfor %}
+{% set detailed = cases | selectattr('highlights') | list %}{% if detailed %}
+## 详细记录
+{% for item in detailed %}
+### {{ item.part if item.part else '' }}：{{ item.title }}
+- **原帖**：[{{ item.tweet_url }}]({{ item.tweet_url }}){% if item.work_time %} · **耗时**：{{ item.work_time }}{% endif %}{% if item.cost_usd != '' and item.cost_usd is not none %} · **成本**：{{ item.cost_usd | cost }}{% endif %}{% if item.duration_sec %} · **时长**：{{ item.duration_sec }}s{% endif %}
+- **提示词**：{{ item.prompt | cell }}
+- **亮点**：{{ item.highlights | join('；') }}
+{% endfor %}{% endif %}
+## 相关资源
+- 线索追踪来源：[PayForChat GPT-6.2 追踪页](https://www.payforchat.com/gpt-6-2)（社区线索汇总）
+- 同系列项目：[Fable5.5 Preview](https://github.com/zqingdut/fable5.5-preview) — Claude Fable 5.5 实测案例索引
+
+## 说明与版权
+- 所有视频与描述均来自各原作者的公开推文，请以原帖为准。
+- 本仓库的整理与索引部分以 [MIT License](LICENSE) 发布；索引所指向的原帖内容与视频版权归原作者所有。
+- 种子案例为 2026 年 11 月初的首批灰度目击与社区演示帖（见上表），每条均标注核验状态；其中演示类作品由原作者标注为 GPT-6.2 Astra 灰度生成，并非标注为 Sol。

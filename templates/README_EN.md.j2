@@ -1,0 +1,42 @@
+[中文](README.md) | **English**
+
+# GPT6.2 Sol Preview — GPT-6.2 Sol Gray-rollout Sightings & Community Test Index
+
+Tracking the gray-rollout trail of **GPT-6.2 Sol** on X (Twitter): quota/usage sightings, insider signals, and community demos from the same gray wave (including GPT-6.2 Astra) — links, prompts and verification status, all in one place.
+
+> **Note**: As of November 2026, GPT-6.2 Sol has not been officially released by OpenAI. Everything below is gray-rollout sightings and community reports; model attribution follows the original authors' labels — please refer to the original posts.
+> This repository is an index only. Video previews are WebP animations of the first 5 seconds; screenshot cases use a thumbnail of the original image. See the original post for the full piece. All posts and videos belong to their respective authors.
+
+> 💡 **Contribute**: Open an [Issue](../../issues/new?template=submit_case.yml) (the form auto-applies the `submission` label) and paste a tweet link — GitHub Actions will parse, classify and add it to this page and to `data/cases.json` automatically.
+
+## Overview
+
+| Preview | Part | Title | Author | Time | Cost | Length | Date | Post |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+{% for item in cases -%}
+| {% if item.preview_webp %}<img src="{{ item.preview_webp }}" width="160" />{% endif %} | {{ 'Initial' if item.part == '初始' else (item.part | cell if item.part else '—') }} | {{ (item.title_en or item.title) | cell }} | {{ item.author }} | {{ item.work_time | cell if item.work_time else '—' }} | {{ item.cost_usd | cost if item.cost_usd != '' and item.cost_usd is not none else '—' }} | {% if item.duration_sec %}{{ item.duration_sec }}s{% else %}—{% endif %} | {{ item.created_at }} | [Link]({{ item.tweet_url }}) |
+{% endfor %}
+{% for cat_key, cat_title in categories_en.items() %}{% set rows = cases | selectattr('category', 'equalto', cat_key) | list %}{% if rows %}
+## {{ cat_title }}
+
+| Preview | Case & Summary | Stack & Status | Prompt / Links |
+| :--- | :--- | :--- | :--- |
+{% for item in rows -%}
+| {% if item.preview_webp %}<img src="{{ item.preview_webp }}" width="220" />{% else %}No preview{% endif %} | **{{ (item.title_en or item.title) | cell }}**<br/>{{ (item.summary_en or item.summary) | cell }}<br/>*By {{ item.author }} ({{ item.created_at }})* | {% if item.tech_stack %}`{{ item.tech_stack | join('` `') }}`<br/>{% endif %}🏷️ {{ item.verification }} | [🔗 Original post]({{ item.tweet_url }}){% if item.demo_url %} / [🕹️ Live demo]({{ item.demo_url }}){% endif %}<br/><details><summary>View Prompt</summary><pre>{{ item.prompt | cell }}</pre></details> |
+{% endfor %}{% endif %}{% endfor %}
+{% set detailed = cases | selectattr('highlights') | list %}{% if detailed %}
+## Detailed Notes
+{% for item in detailed %}
+### {{ 'Initial' if item.part == '初始' else item.part }}: {{ item.title_en or item.title }}
+- **Post**: [{{ item.tweet_url }}]({{ item.tweet_url }}){% if item.work_time %} · **Time**: {{ item.work_time }}{% endif %}{% if item.cost_usd != '' and item.cost_usd is not none %} · **Cost**: {{ item.cost_usd | cost }}{% endif %}{% if item.duration_sec %} · **Length**: {{ item.duration_sec }}s{% endif %}
+- **Prompt**: {{ item.prompt | cell }}
+- **Highlights**: {{ (item.highlights_en or item.highlights) | join('; ') }}
+{% endfor %}{% endif %}
+## Related Resources
+- Sighting tracker source: [PayForChat GPT-6.2 tracker](https://www.payforchat.com/gpt-6-2) (community roundup)
+- Sibling project: [Fable5.5 Preview](https://github.com/zqingdut/fable5.5-preview) — Claude Fable 5.5 hands-on case index
+
+## Notes & Copyright
+- All videos and descriptions come from the authors' public posts; please refer to the originals.
+- The index itself is released under the [MIT License](LICENSE); the linked posts and videos belong to their original authors.
+- Seed cases are the first gray-rollout sightings and community demo posts from early November 2026 (see the table above), each labelled with its verification status; the demo works were labelled by their authors as GPT-6.2 Astra gray-rollout output, not as Sol.
