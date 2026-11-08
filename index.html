@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GPT6.2 Sol Preview — GPT-6.2 Sol 灰度目击与社区实测索引</title>
+<meta name="description" content="追踪 X 上 GPT-6.2 Sol 的灰度目击、官方暗示与社区实测案例：预览、提示词与核验状态，一处索引。" />
+<link rel="stylesheet" href="site.css" />
+</head>
+<body>
+<header class="hero">
+  <h1>GPT6.2 Sol Preview</h1>
+  <p class="sub" id="heroSub">GPT-6.2 Sol 灰度目击与社区实测案例索引 — 目击 · 演示 · 提示词</p>
+  <p class="notice" id="heroNotice">⚠️ GPT-6.2 Sol 尚未被 OpenAI 官方发布，以下均为灰度目击与社区报告，模型归属以原帖作者标注为准。预览为原视频前 5 秒动图，完整内容见原帖；版权归各原作者所有。</p>
+  <div class="hero-actions">
+    <a class="btn" id="btnRepo" href="https://github.com/zqingdut/gpt6.2sol-preview" target="_blank" rel="noopener">GitHub 仓库</a>
+    <a class="btn ghost" id="btnSubmit" href="https://github.com/zqingdut/gpt6.2sol-preview/issues/new?template=submit_case.yml" target="_blank" rel="noopener">📥 提交案例</a>
+    <span class="lang-switch" role="group" aria-label="Language">
+      <button type="button" class="lang-btn" id="langZh">中文</button>
+      <button type="button" class="lang-btn" id="langEn">EN</button>
+    </span>
+    <span class="count" id="count"></span>
+  </div>
+</header>
+
+<nav class="filters" id="filters">
+  <button class="pill active" data-cat="all">全部</button>
+  <button class="pill" data-cat="video_gen">🎬 动画与视频生成</button>
+  <button class="pill" data-cat="interactive_h5">📱 交互式 H5 与微应用</button>
+  <button class="pill" data-cat="game_physics">🎮 网页小游戏与物理模拟</button>
+  <button class="pill" data-cat="shader_ui">🎨 前端 UI 与 Shader 特效</button>
+  <input id="search" type="search" placeholder="搜索标题 / 作者 / 技术栈…" />
+</nav>
+
+<main id="grid" class="grid"><p class="loading" id="loadingText">加载案例中…</p></main>
+
+<footer>
+  <p id="footerText">索引与整理以 MIT 发布；原帖内容与视频版权归各原作者所有。数据自动更新自
+  <a href="https://github.com/zqingdut/gpt6.2sol-preview/blob/main/data/cases.json" target="_blank" rel="noopener">data/cases.json</a>。</p>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
