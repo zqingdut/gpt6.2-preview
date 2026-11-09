@@ -1,4 +1,4 @@
-name: Ingest GPT-6.2 Sol Tweet Case
+name: Ingest GPT-6.2 Tweet Case
 
 on:
   issues:
