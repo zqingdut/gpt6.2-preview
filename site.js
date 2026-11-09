@@ -33,7 +33,7 @@
     },
     en: {
       sub: 'An index of GPT-6.2 Sol gray-rollout sightings & community tests — sightings · demos · prompts',
-      notice: '⚠️ GPT-6.2 Sol has not been officially released by OpenAI. Everything here is gray-rollout sightings and community reports; model attribution follows the original authors' labels. Previews are animated clips of the first 5 seconds; see the original post for the full piece. All content belongs to its authors.',
+      notice: '⚠️ GPT-6.2 Sol has not been officially released by OpenAI. Everything here is gray-rollout sightings and community reports; model attribution follows the labels given by the original authors. Previews are animated clips of the first 5 seconds; see the original post for the full piece. All content belongs to its authors.',
       repo: 'GitHub Repo',
       submit: '📥 Submit a Case',
       pills: {
