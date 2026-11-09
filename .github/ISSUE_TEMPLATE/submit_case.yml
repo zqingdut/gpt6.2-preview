@@ -1,5 +1,5 @@
-name: 📥 提交 GPT-6.2 Sol 灰度案例
-description: 粘贴一条 X/Twitter 推文链接（GPT-6.2 Sol / Astra 灰度目击或社区实测），机器人会自动解析并收录到 README 与 data/cases.json
+name: 📥 提交 GPT-6.2 灰度案例
+description: 粘贴一条 X/Twitter 推文链接（GPT-6.2 Astra / Sol 灰度目击或社区实测），机器人会自动解析并收录到 README 与 data/cases.json
 title: "[case] "
 labels: ["submission"]
 body:
