@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Auto-ingest a GPT-6.2 Sol gray-rollout tweet into data/cases.json.
+"""Auto-ingest a GPT-6.2 gray-rollout tweet into data/cases.json.
 
 Pipeline: FxTwitter public API (metadata + direct media links) ->
 optional media download + WebP preview (yt-dlp, direct-URL fallback) ->
@@ -243,7 +243,7 @@ def analyze_with_llm(
         api_key=os.environ["LLM_API_KEY"],
         base_url=os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1"),
     )
-    system_prompt = """你是一个开源项目整理助手，负责整理 GPT-6.2 Sol（及同批灰度的 GPT-6.2 Astra）的灰度目击与社区实测案例。
+    system_prompt = """你是一个开源项目整理助手，负责整理 GPT-6.2（Astra 与 Sol 两条线）的灰度目击与社区实测案例。
 请根据推文内容提取以下 JSON 字段（严格输出合法 JSON）：
 - category: 只能是 ["demo_3d", "sighting", "signal"] 之一（demo_3d=作者发布的演示作品，sighting=用量/配额/界面等目击截图，signal=暗示、报道与讨论帖）
 - category_name: 对应 ["🧊 3D 与游戏演示", "🔍 灰度目击", "📡 信号与讨论"]

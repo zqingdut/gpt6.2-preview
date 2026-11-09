@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Discover new GPT-6.2 Sol gray-rollout tweets from curated source collections and
+"""Discover new GPT-6.2 gray-rollout tweets from curated source collections and
 ingest them automatically.
 
 Discovery channels (no X API key required):
@@ -72,7 +72,7 @@ def from_x_api() -> list[tuple[str, str]]:
             "https://api.twitter.com/2/tweets/search/recent",
             headers={"Authorization": f"Bearer {token}"},
             params={
-                "query": '"GPT-6.2 Sol" OR "gpt-6.2-sol" (has:videos OR has:links) -is:retweet',
+                "query": '"GPT-6.2 Sol" OR "GPT-6.2 Astra" OR "gpt-6.2-sol" OR "gpt-6.2-astra" (has:videos OR has:links) -is:retweet',
                 "max_results": 50,
                 "expansions": "author_id",
                 "user.fields": "username",
