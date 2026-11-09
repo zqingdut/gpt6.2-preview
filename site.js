@@ -1,4 +1,4 @@
-// GPT6.2 Sol Preview — waterfall front-end (bilingual zh / en).
+// GPT-6.2 Preview — waterfall front-end (bilingual zh / en).
 // Data source: data/cases.json (single source of truth, auto-maintained).
 // English content uses title_en / summary_en when present, else falls back
 // to the original fields. Layout: JS-managed flex columns — expanding a
@@ -6,8 +6,8 @@
 (function () {
   var STR = {
     zh: {
-      sub: 'GPT-6.2 Sol 灰度目击与社区实测案例索引 — 目击 · 演示 · 提示词',
-      notice: '⚠️ GPT-6.2 Sol 尚未被 OpenAI 官方发布，以下均为灰度目击与社区报告，模型归属以原帖作者标注为准。预览为原视频前 5 秒动图，完整内容见原帖；版权归各原作者所有。',
+      sub: 'GPT-6.2 灰度目击与社区实测案例索引 — 目击 · 演示 · 提示词',
+      notice: '⚠️ GPT-6.2 尚未被 OpenAI 官方发布，以下均为灰度目击与社区报告，涵盖 Astra 与 Sol 两条线，模型归属以原帖作者标注为准。预览为原视频前 5 秒动图，完整内容见原帖；版权归各原作者所有。',
       repo: 'GitHub 仓库',
       submit: '📥 提交案例',
       pills: {
@@ -28,12 +28,12 @@
       loading: '加载案例中…',
       empty: '没有符合条件的案例。',
       loadFail: function (m) { return '案例数据加载失败（' + m + '），请到 GitHub 仓库查看。'; },
-      footer: '索引与整理以 MIT 发布；原帖内容与视频版权归各原作者所有。数据自动更新自 <a href="https://github.com/zqingdut/gpt6.2sol-preview/blob/main/data/cases.json" target="_blank" rel="noopener">data/cases.json</a>。',
+      footer: '索引与整理以 MIT 发布；原帖内容与视频版权归各原作者所有。数据自动更新自 <a href="https://github.com/zqingdut/gpt6.2-preview/blob/main/data/cases.json" target="_blank" rel="noopener">data/cases.json</a>。',
       promptFallback: '未公开'
     },
     en: {
-      sub: 'An index of GPT-6.2 Sol gray-rollout sightings & community tests — sightings · demos · prompts',
-      notice: '⚠️ GPT-6.2 Sol has not been officially released by OpenAI. Everything here is gray-rollout sightings and community reports; model attribution follows the labels given by the original authors. Previews are animated clips of the first 5 seconds; see the original post for the full piece. All content belongs to its authors.',
+      sub: 'An index of GPT-6.2 gray-rollout sightings & community tests — sightings · demos · prompts',
+      notice: '⚠️ GPT-6.2 has not been officially released by OpenAI. Everything here is gray-rollout sightings and community reports covering both the Astra and Sol lines; model attribution follows the labels given by the original authors. Previews are animated clips of the first 5 seconds; see the original post for the full piece. All content belongs to its authors.',
       repo: 'GitHub Repo',
       submit: '📥 Submit a Case',
       pills: {
@@ -54,7 +54,7 @@
       loading: 'Loading cases…',
       empty: 'No cases match.',
       loadFail: function (m) { return 'Failed to load case data (' + m + '). Please check the GitHub repo.'; },
-      footer: 'The index is MIT-licensed; posts and videos belong to their original authors. Data auto-updates from <a href="https://github.com/zqingdut/gpt6.2sol-preview/blob/main/data/cases.json" target="_blank" rel="noopener">data/cases.json</a>.',
+      footer: 'The index is MIT-licensed; posts and videos belong to their original authors. Data auto-updates from <a href="https://github.com/zqingdut/gpt6.2-preview/blob/main/data/cases.json" target="_blank" rel="noopener">data/cases.json</a>.',
       promptFallback: 'Not published'
     }
   };

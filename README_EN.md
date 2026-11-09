@@ -1,10 +1,10 @@
 [中文](README.md) | **English**
 
-# GPT6.2 Sol Preview — GPT-6.2 Sol Gray-rollout Sightings & Community Test Index
+# GPT-6.2 Preview — GPT-6.2 Gray-rollout Sightings & Community Test Index
 
-Tracking the gray-rollout trail of **GPT-6.2 Sol** on X (Twitter): quota/usage sightings, insider signals, and community demos from the same gray wave (including GPT-6.2 Astra) — links, prompts and verification status, all in one place.
+Tracking the gray-rollout trail of **GPT-6.2 (Astra / Sol)** on X (Twitter): quota/usage sightings, insider signals, and community 3D & game demos — links, prompts and verification status, all in one place.
 
-> **Note**: As of November 2026, GPT-6.2 Sol has not been officially released by OpenAI. Everything below is gray-rollout sightings and community reports; model attribution follows the original authors' labels — please refer to the original posts.
+> **Note**: As of November 2026, GPT-6.2 has not been officially released by OpenAI. Everything below is gray-rollout sightings and community reports; model attribution follows the original authors' labels — please refer to the original posts.
 > This repository is an index only. Video previews are WebP animations of the first 5 seconds; screenshot cases use a thumbnail of the original image. See the original post for the full piece. All posts and videos belong to their respective authors.
 
 > 💡 **Contribute**: Open an [Issue](../../issues/new?template=submit_case.yml) (the form auto-applies the `submission` label) and paste a tweet link — GitHub Actions will parse, classify and add it to this page and to `data/cases.json` automatically.
